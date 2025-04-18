@@ -141,7 +141,7 @@ if [ ! -z "$(pgrep --ns $$ tailscaled)" ]; then
   kill -SIGTERM $(pgrep --ns $$ tailscaled) 2&gt;/dev/null
 fi
 #Remove plugin related files
-rm -rf /usr/local/emhttp/plugins/&name; &plugin;
+rm -rf /usr/local/emhttp/plugins/&name; &plugin; /usr/local/bin/tailscaled /usr/local/bin/tailscale
 echo
 echo "----------------------------------------------"
 echo "------Tailscale CLI plugin uninstalled!-------"
