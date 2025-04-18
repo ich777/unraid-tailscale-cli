@@ -46,7 +46,7 @@ NEWPACKAGE="false"
 
 #Get latest and local version from Tailscale
 TAILSCALE_VERSION="$(wget -qO- 'https://pkgs.tailscale.com/stable/?mode=json' | jq -r '.TarballsVersion')"
-TAILSCALE_AVAIL_VERSION="$(ls -1 /root/tailscale-package/ 2&gt;/dev/null | cut -d '_' -f2 | sort -V | tail -1)"
+TAILSCALE_AVAIL_VERSION="$(ls -1 &plugin;/tailscale-package/ 2&gt;/dev/null | cut -d '_' -f2 | sort -V | tail -1)"
 if [ -z "${TAILSCALE_VERSION}" ]; then
   if [ -z "${TAILSCALE_AVAIL_VERSION}" ]; then
     echo "ERROR: Can't get latest version and found no local version from Tailscale!"
