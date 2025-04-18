@@ -134,7 +134,13 @@ fi
 echo "---------------------------------------"
 echo "---Uninstalling Tailscale CLI plugin---"
 echo "---------------------------------------"
-# Remove plugin related files
+#Stop Tailscale
+if [ ! -z "$(pgrep --ns $$ tailscaled)" ]; then
+  echo "Stopping Tailscale"
+  tailscale down 2&gt;/dev/null
+  kill -SIGTERM $(pgrep --ns $$ tailscaled) 2&gt;/dev/null
+fi
+#Remove plugin related files
 rm -rf /usr/local/emhttp/plugins/&name; &plugin;
 echo
 echo "----------------------------------------------"
