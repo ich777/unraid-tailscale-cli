@@ -101,14 +101,14 @@ else
 fi
 
 #Start Tailscale if enabled
-if [ "$(echo "${SETTINGS}" | grep "TAILSCALE_ENABLED=" | cut -d '=' -f2-)" == "true" ] && [ -z "$(pgrep --ns $$ tailscaled)" ]; then
+if [ "$(echo "${SETTINGS}" | grep "TAILSCALE_ENABLED=" | cut -d '=' -f2-)" == "true" ] &amp;&amp; [ -z "$(pgrep --ns $$ tailscaled)" ]; then
   TSD_PARAMS="$(echo "${SETTINGS}" | grep "TAILSCALED_params=" | cut -d '=' -f2-)"
   if [ ! -z "${TSD_PARAMS}" ]; then
     TSD_PARAMS=" ${TSD_PARAMS}"
   fi
   echo "Starting Tailscale!"
   echo "/usr/local/bin/tailscaled -statedir=&plugin;/state${TSD_PARAMS} &gt;/dev/null 2&gt;&amp;1" | at now -M
-elif [ "$(echo "${SETTINGS}" | grep "TAILSCALE_ENABLED=" | cut -d '=' -f2-)" == "true" ] && [ ! -z "$(pgrep --ns $$ tailscaled)" ]; then
+elif [ "$(echo "${SETTINGS}" | grep "TAILSCALE_ENABLED=" | cut -d '=' -f2-)" == "true" ] &amp;&amp; [ ! -z "$(pgrep --ns $$ tailscaled)" ]; then
   echo "Tailscale already started!"
 else
   echo "WARNING: Tailscale disabled!"
