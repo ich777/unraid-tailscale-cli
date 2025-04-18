@@ -2,7 +2,7 @@
 <!DOCTYPE PLUGIN [
   <!ENTITY name      "tailscale-cli">
   <!ENTITY author    "ich777">
-  <!ENTITY version   "2025.04.18">
+  <!ENTITY version   "2025.04.18a">
   <!ENTITY gitURL    "https://git.minenet.at/&author;/unraid-&name;/raw/branch/master">
   <!ENTITY pluginURL "&gitURL;/&name;.plg">
   <!ENTITY plugin    "/boot/config/plugins/&name;">
@@ -13,7 +13,7 @@
 
 <CHANGES>
 
-###2025.04.18
+###2025.04.18a
 - Initial Release
 
 </CHANGES>
@@ -71,12 +71,13 @@ if [ -z "${TAILSCALE_AVAIL_VERSION}" ]; then
 elif [ "${TAILSCALE_VERSION}" != "${TAILSCALE_AVAIL_VERSION}" ]; then
   if wget -q -nc -O &plugin;/tailscale-package/tailscale_${TAILSCALE_VERSION}_amd64.tgz "https://pkgs.tailscale.com/stable/tailscale_${TAILSCALE_VERSION}_amd64.tgz" ; then
     echo "Download from Tailscale version ${TAILSCALE_VERSION} successful!"
+    NEWPACKAGE="true"
   else
     echo "ERROR: Download from Tailscale version ${TAILSCALE_VERSION} failed!"
-    rm -rf &plugin;
-    exit 1
+    echo "       Falling back to local available Tailscale version: ${TAILSCALE_AVAIL_VERSION}"
+    rm -rf &plugin;/tailscale-package/tailscale_${TAILSCALE_VERSION}_amd64.tgz
+    TAILSCALE_VERSION="${TAILSCALE_AVAIL_VERSION}"
   fi
-  NEWPACKAGE="true"
 else
   echo "Tailscale version: ${TAILSCALE_AVAIL_VERSION} up-to-date!"
 fi
