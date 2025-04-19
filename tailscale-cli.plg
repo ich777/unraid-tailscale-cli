@@ -144,7 +144,7 @@ fi
 #Create cron job
 if [ ! -f &plugin;/tailscale.cron ]; then
   echo -e "# Tailscale CLI Plugin cron job:\n30 5 * * * /usr/local/emhttp/plugins/&name;/scripts/tailscale-check.sh &gt;/dev/null 2&gt;&amp;1\n\n" > &plugin;/tailscale.cron
-  /usr/local/sbin/update_cron
+  bash /usr/local/sbin/update_cron
 fi
 
 </INLINE>
