@@ -154,7 +154,7 @@ if [ ! -f &plugin;/tailscale.cron ]; then
     /usr/local/sbin/update_cron
   fi
 fi
-echo "Tailscale CLI plugin installed!
+echo "Tailscale CLI plugin installed"
 
 echo
 </INLINE>
