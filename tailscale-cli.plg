@@ -41,7 +41,13 @@ fi
 #Create settings file if not found and try to get Headscale container name
 if [ ! -f "&plugin;/settings.cfg" ]; then
   echo 'TAILSCALE_ENABLED=true
+TAILSCALE_UPDATE_CHECK=true
 TAILSCALED_PARAMS=' > "&plugin;/settings.cfg"
+fi
+
+#Add missing setting if not found
+if ! grep -q "TAILSCALE_UPDATE_CHECK=" &plugin;/settings.cfg; then
+  sed -i '$ a\TAILSCALE_UPDATE_CHECK=true' &plugin;/settings.cfg
 fi
 
 #Get/set variables
@@ -49,8 +55,14 @@ SETTINGS="$(cat &plugin;/settings.cfg)"
 NEWPACKAGE="false"
 
 #Get latest and local version from Tailscale
-TAILSCALE_VERSION="$(wget -qO- 'https://pkgs.tailscale.com/stable/?mode=json' | jq -r '.TarballsVersion')"
 TAILSCALE_AVAIL_VERSION="$(ls -1 &plugin;/tailscale-package/ 2&gt;/dev/null | cut -d '_' -f2 | sort -V | tail -1)"
+if [ "$(echo "${SETTINGS}" | grep "TAILSCALE_UPDATE_CHECK=" | cut -d '=' -f2-)" == "true" ]; then
+  TAILSCALE_VERSION="$(wget -qO- 'https://pkgs.tailscale.com/stable/?mode=json' | jq -r '.TarballsVersion')"
+else
+  echo "WARNING: Auto updates from Tailscale disabled"
+  TAILSCALE_VERSION="${TAILSCALE_AVAIL_VERSION}"
+fi
+
 if [ -z "${TAILSCALE_VERSION}" ]; then
   if [ -z "${TAILSCALE_AVAIL_VERSION}" ]; then
     echo "ERROR: Can't get latest version and found no local version from Tailscale"
@@ -147,7 +159,7 @@ if [ ! -f &plugin;/tailscale.cron ]; then
   echo -e "# Tailscale CLI Plugin cron job:\n30 5 * * * /usr/local/emhttp/plugins/&name;/scripts/tailscale-check.sh &gt;/dev/null 2&gt;&amp;1\n\n" > &plugin;/tailscale.cron
 fi
 
-if [ ! "$(cat /etc/cron.d/root 2&gt;>/dev/null | grep -q "# Tailscale CLI Plugin cron job:")" ]; then
+if [ ! "$(cat /etc/cron.d/root 2&gt;>/dev/null | grep -q "# Tailscale CLI Plugin cron job:")" ] && [ "$(echo "${SETTINGS}" | grep "TAILSCALE_UPDATE_CHECK=" | cut -d '=' -f2-)" == "true" ]; then
   #Workaround for update cron
   if [ ! -f /boot/config/plugins/&name;.plg ]; then
     touch /var/log/plugins/&name;.plg
