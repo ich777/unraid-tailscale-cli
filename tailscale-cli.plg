@@ -2,7 +2,7 @@
 <!DOCTYPE PLUGIN [
   <!ENTITY name      "tailscale-cli">
   <!ENTITY author    "ich777">
-  <!ENTITY version   "2025.04.19">
+  <!ENTITY version   "2025.04.19a">
   <!ENTITY gitURL    "https://git.minenet.at/&author;/unraid-&name;/raw/branch/master">
   <!ENTITY pluginURL "&gitURL;/&name;.plg">
   <!ENTITY plugin    "/boot/config/plugins/&name;">
@@ -13,7 +13,7 @@
 
 <CHANGES>
 
-###2025.04.19
+###2025.04.19a
 - Add daily cron job at 5:30 to check for new Tailscale versions
 
 ###2025.04.18a
@@ -145,6 +145,9 @@ fi
 #Create cron job
 if [ ! -f &plugin;/tailscale.cron ]; then
   echo -e "# Tailscale CLI Plugin cron job:\n30 5 * * * /usr/local/emhttp/plugins/&name;/scripts/tailscale-check.sh &gt;/dev/null 2&gt;&amp;1\n\n" > &plugin;/tailscale.cron
+fi
+
+if [ ! "$(cat /etc/cron.d/root 2&gt;>/dev/null | grep -q "# Tailscale CLI Plugin cron job:")" ]; then
   #Workaround for update cron
   if [ ! -f /boot/config/plugins/&name;.plg ]; then
     touch /var/log/plugins/&name;.plg
@@ -162,7 +165,7 @@ echo
 
 <FILE Run="/bin/bash" Method="remove">
 <INLINE>
-
+echo
 echo "---------------------------------------"
 echo "---Uninstalling Tailscale CLI plugin---"
 echo "---------------------------------------"
@@ -178,7 +181,6 @@ echo "----------------------------------------------"
 echo "------Tailscale CLI plugin uninstalled!-------"
 echo "----------------------------------------------"
 echo
-
 </INLINE>
 </FILE>
 </PLUGIN>
