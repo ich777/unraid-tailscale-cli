@@ -155,11 +155,17 @@ if [ ! -f /usr/local/emhttp/plugins/&name;/scripts/tailscale-check.sh ]; then
 fi
 
 #Create cron job
-if [ ! -f &plugin;/tailscale.cron ]; then
-  echo -e "# Tailscale CLI Plugin cron job:\n30 5 * * * /usr/local/emhttp/plugins/&name;/scripts/tailscale-check.sh &gt;/dev/null 2&gt;&amp;1\n\n" > &plugin;/tailscale.cron
+if [ "$(echo "${SETTINGS}" | grep "TAILSCALE_UPDATE_CHECK=" | cut -d '=' -f2-)" == "true" ]; then
+  if [ ! -f &plugin;/tailscale.cron ]; then
+    echo -e "# Tailscale CLI Plugin cron job:\n30 5 * * * /usr/local/emhttp/plugins/&name;/scripts/tailscale-check.sh &gt;/dev/null 2&gt;&amp;1\n\n" > &plugin;/tailscale.cron
+  fi
+else
+  if [ -f &plugin;/tailscale.cron ]; then
+    rm -f &plugin;/tailscale.cron
+  fi
 fi
 
-if [ ! "$(cat /etc/cron.d/root 2&gt;>/dev/null | grep -q "# Tailscale CLI Plugin cron job:")" ] &amp;&amp; [ "$(echo "${SETTINGS}" | grep "TAILSCALE_UPDATE_CHECK=" | cut -d '=' -f2-)" == "true" ]; then
+if [ "$(echo "${SETTINGS}" | grep "TAILSCALE_UPDATE_CHECK=" | cut -d '=' -f2-)" == "true" ] &amp;&amp; [ ! "$(cat /etc/cron.d/root 2&gt;>/dev/null | grep -q "# Tailscale CLI Plugin cron job:")" ]; then
   #Workaround for update cron
   if [ ! -f /boot/config/plugins/&name;.plg ]; then
     touch /var/log/plugins/&name;.plg
