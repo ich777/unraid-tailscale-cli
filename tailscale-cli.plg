@@ -31,6 +31,7 @@ This plugin will install the vanilla Tailscale on your Unraid server.
 
 <FILE Run="/bin/bash">
 <INLINE>
+echo
 
 #Create folders if not found
 if [ ! -d "&plugin;" ]; then
@@ -153,7 +154,9 @@ if [ ! -f &plugin;/tailscale.cron ]; then
     /usr/local/sbin/update_cron
   fi
 fi
+echo "Tailscale CLI plugin installed!
 
+echo
 </INLINE>
 </FILE>
 
