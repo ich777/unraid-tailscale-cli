@@ -2,7 +2,7 @@
 <!DOCTYPE PLUGIN [
   <!ENTITY name      "tailscale-cli">
   <!ENTITY author    "ich777">
-  <!ENTITY version   "2025.04.18a">
+  <!ENTITY version   "2025.04.19">
   <!ENTITY gitURL    "https://git.minenet.at/&author;/unraid-&name;/raw/branch/master">
   <!ENTITY pluginURL "&gitURL;/&name;.plg">
   <!ENTITY plugin    "/boot/config/plugins/&name;">
@@ -12,6 +12,9 @@
 <PLUGIN  name="&name;" author="&author;" version="&version;" pluginURL="&pluginURL;" min="6.9.0">
 
 <CHANGES>
+
+###2025.04.19
+- Add daily cron job at 5:30 to check for new Tailscale versions
 
 ###2025.04.18a
 - Initial Release
@@ -124,6 +127,26 @@ if [ ! -f &plugin;/&name;.png ]; then
 fi
 if [ ! -f /usr/local/emhttp/plugins/&name;/images/&name;.png ]; then
   cp &plugin;/&name;.png /usr/local/emhttp/plugins/&name;/images/&name;.png
+fi
+
+#Install update script
+if [ ! -d /usr/local/emhttp/plugins/&name;/scripts ]; then
+  mkdir -p /usr/local/emhttp/plugins/&name;/scripts
+fi
+if [ ! -f &plugin;/tailscale-check.sh ]; then
+  wget -q -O &plugin;/tailscale-check.sh "https://git.minenet.at/ich777/unraid-tailscale-cli/raw/branch/master/tailscale-check.sh"
+fi
+if [ ! -f /usr/local/emhttp/plugins/&name;/scripts/tailscale-check.sh ]; then
+  cp &plugin;/tailscale-check.sh /usr/local/emhttp/plugins/&name;/scripts/tailscale-check.sh
+  chmod +x /usr/local/emhttp/plugins/&name;/scripts/tailscale-check.sh
+fi
+
+#Create cron job
+if [ ! -f &plugin;/tailscale.cron ]; then
+  echo "# Tailscale CLI Plugin cron job:
+30 5 * * * /usr/local/emhttp/plugins/&name;/scripts/tailscale-check.sh &amp;&gt; /dev/null" > &plugin;/tailscale.cron
+  sleep 1
+  update_cron
 fi
 
 </INLINE>
