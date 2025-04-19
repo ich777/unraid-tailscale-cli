@@ -52,7 +52,7 @@ TAILSCALE_VERSION="$(wget -qO- 'https://pkgs.tailscale.com/stable/?mode=json' | 
 TAILSCALE_AVAIL_VERSION="$(ls -1 &plugin;/tailscale-package/ 2&gt;/dev/null | cut -d '_' -f2 | sort -V | tail -1)"
 if [ -z "${TAILSCALE_VERSION}" ]; then
   if [ -z "${TAILSCALE_AVAIL_VERSION}" ]; then
-    echo "ERROR: Can't get latest version and found no local version from Tailscale!"
+    echo "ERROR: Can't get latest version and found no local version from Tailscale"
     rm -rf &plugin;
     exit 1
   else
@@ -65,24 +65,24 @@ fi
 if [ -z "${TAILSCALE_AVAIL_VERSION}" ]; then
   echo "Tailscale not found, downloading version: ${TAILSCALE_VERSION}"
   if wget -q -nc -O &plugin;/tailscale-package/tailscale_${TAILSCALE_VERSION}_amd64.tgz "https://pkgs.tailscale.com/stable/tailscale_${TAILSCALE_VERSION}_amd64.tgz" ; then
-    echo "Download from Tailscale version ${TAILSCALE_VERSION} successful!"
+    echo "Download from Tailscale version ${TAILSCALE_VERSION} successful"
   else
-    echo "ERROR: Download from Tailscale version ${TAILSCALE_VERSION} failed!"
+    echo "ERROR: Download from Tailscale version ${TAILSCALE_VERSION} failed"
     rm -rf &plugin;
     exit 1
   fi
 elif [ "${TAILSCALE_VERSION}" != "${TAILSCALE_AVAIL_VERSION}" ]; then
   if wget -q -nc -O &plugin;/tailscale-package/tailscale_${TAILSCALE_VERSION}_amd64.tgz "https://pkgs.tailscale.com/stable/tailscale_${TAILSCALE_VERSION}_amd64.tgz" ; then
-    echo "Download from Tailscale version ${TAILSCALE_VERSION} successful!"
+    echo "Download from Tailscale version ${TAILSCALE_VERSION} successful"
     NEWPACKAGE="true"
   else
-    echo "ERROR: Download from Tailscale version ${TAILSCALE_VERSION} failed!"
+    echo "ERROR: Download from Tailscale version ${TAILSCALE_VERSION} failed"
     echo "       Falling back to local available Tailscale version: ${TAILSCALE_AVAIL_VERSION}"
     rm -rf &plugin;/tailscale-package/tailscale_${TAILSCALE_VERSION}_amd64.tgz
     TAILSCALE_VERSION="${TAILSCALE_AVAIL_VERSION}"
   fi
 else
-  echo "Tailscale version: ${TAILSCALE_AVAIL_VERSION} up-to-date!"
+  echo "Tailscale version: ${TAILSCALE_AVAIL_VERSION} up-to-date"
 fi
 
 #Remove old Tailscale Packages
@@ -110,12 +110,12 @@ if [ "$(echo "${SETTINGS}" | grep "TAILSCALE_ENABLED=" | cut -d '=' -f2-)" == "t
   if [ ! -z "${TSD_PARAMS}" ]; then
     TSD_PARAMS=" ${TSD_PARAMS}"
   fi
-  echo "Starting Tailscale!"
-  echo "/usr/local/bin/tailscaled -statedir=&plugin;/state${TSD_PARAMS} &gt;/dev/null 2&gt;&amp;1" | at now -M
+  echo "Starting Tailscale"
+  echo "/usr/local/bin/tailscaled -statedir=&plugin;/state${TSD_PARAMS} &gt;/dev/null 2&gt;&amp;1" | at now -M &gt;/dev/null 2&gt;&amp;1
 elif [ "$(echo "${SETTINGS}" | grep "TAILSCALE_ENABLED=" | cut -d '=' -f2-)" == "true" ] &amp;&amp; [ ! -z "$(pgrep --ns $$ tailscaled)" ]; then
-  echo "Tailscale already started!"
+  echo "Tailscale already started"
 else
-  echo "WARNING: Tailscale disabled!"
+  echo "WARNING: Tailscale disabled"
 fi
 
 #Install icon
@@ -143,10 +143,9 @@ fi
 
 #Create cron job
 if [ ! -f &plugin;/tailscale.cron ]; then
-  echo "# Tailscale CLI Plugin cron job:
-30 5 * * * /usr/local/emhttp/plugins/&name;/scripts/tailscale-check.sh &amp;&gt; /dev/null" > &plugin;/tailscale.cron
+  echo -e "# Tailscale CLI Plugin cron job:\n30 5 * * * /usr/local/emhttp/plugins/&name;/scripts/tailscale-check.sh &amp;&gt; /dev/null\n\n" > &plugin;/tailscale.cron
   sleep 1
-  update_cron
+  echo "update_cron" | at now -M &gt;/dev/null 2&gt;&amp;1
 fi
 
 </INLINE>
@@ -166,6 +165,8 @@ if [ ! -z "$(pgrep --ns $$ tailscaled)" ]; then
 fi
 #Remove plugin related files
 rm -rf /usr/local/emhttp/plugins/&name; &plugin; /usr/local/bin/tailscaled /usr/local/bin/tailscale
+#Update cron
+update_cron
 echo
 echo "----------------------------------------------"
 echo "------Tailscale CLI plugin uninstalled!-------"
