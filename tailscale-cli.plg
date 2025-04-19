@@ -25,7 +25,7 @@
 <INLINE>
 **Tailscale CLI**
 
-This plugin will install the vanilla Tailscale on your Unraid server.
+This plugin installs Tailscale on your Unraid server, no GUI only CLI, just plain Tailscale.
 </INLINE>
 </FILE>
 
