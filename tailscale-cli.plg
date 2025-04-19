@@ -174,8 +174,6 @@ if [ ! -z "$(pgrep --ns $$ tailscaled)" ]; then
 fi
 #Remove plugin related files
 rm -rf /usr/local/emhttp/plugins/&name; &plugin; /usr/local/bin/tailscaled /usr/local/bin/tailscale
-#Update cron
-update_cron
 echo "----------------------------------------------"
 echo "------Tailscale CLI plugin uninstalled!-------"
 echo "----------------------------------------------"
