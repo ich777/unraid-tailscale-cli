@@ -1,6 +1,6 @@
 # Unraid Tailscale CLI Plugin
 
-This is just a plugin which installs Tailscale and runs it.  
+This is just a plugin which installs Tailscale and run it.  
 
 ## Installation
 
