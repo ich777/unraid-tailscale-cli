@@ -1,0 +1,18 @@
+Menu="Buttons:10"
+Link="nav-user"
+---
+<?php
+$ts_status = exec("tailscale status --json | jq -r '.Self.Online'");
+?>
+<script>
+var ts_status = <?php echo json_encode($ts_status); ?>;
+var tailscale_status = (ts_status === 'true');
+var menuElement = $("#menu");
+var usageBarElement = menuElement.find(".nav-item.LogoutButton.util");
+if (tailscale_status) {
+  var additionalContent = "<div class='nav-item tailscale-cli util'><a title=\"Tailscale: Connected\"><img src=\"/plugins/tailscale-cli/images/tailscale-cli.png\" width=\"23\" height=\"23\"></a></div>";
+} else {
+  var additionalContent = "<div class='nav-item tailscale-cli util'><a href=\"#\" title=\"Tailscale: Disconnected\" onclick=\"TerminalButton();return false;\"><img src=\"/plugins/tailscale-cli/images/offline.png\" width=\"23\" height=\"23\"></a></div>";
+}
+usageBarElement.before(additionalContent);
+</script>
