@@ -3,7 +3,7 @@
   <!ENTITY name      "tailscale-cli">
   <!ENTITY author    "ich777">
   <!ENTITY version   "2025.04.23">
-  <!ENTITY gitURL    "https://git.minenet.at/&author;/unraid-&name;/raw/branch/master">
+  <!ENTITY gitURL    "https://raw.githubusercontent.com/&author;/unraid-&name;/master">
   <!ENTITY pluginURL "&gitURL;/&name;.plg">
   <!ENTITY plugin    "/boot/config/plugins/&name;">
   <!ENTITY emhttp    "/usr/local/emhttp/plugins/&name;">
@@ -159,7 +159,7 @@ if [ ! -d /usr/local/emhttp/plugins/&name;/scripts ]; then
   mkdir -p /usr/local/emhttp/plugins/&name;/scripts
 fi
 if [ ! -f &plugin;/tailscale-check.sh ]; then
-  wget -q -O &plugin;/tailscale-check.sh "https://git.minenet.at/ich777/unraid-tailscale-cli/raw/branch/master/tailscale-check.sh"
+  wget -q -O &plugin;/tailscale-check.sh "https://raw.githubusercontent.com/ich777/unraid-tailscale-cli/master/tailscale-check.sh"
 fi
 if [ ! -f /usr/local/emhttp/plugins/&name;/scripts/tailscale-check.sh ]; then
   cp &plugin;/tailscale-check.sh /usr/local/emhttp/plugins/&name;/scripts/tailscale-check.sh
