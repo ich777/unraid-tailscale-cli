@@ -2,16 +2,19 @@
 <!DOCTYPE PLUGIN [
   <!ENTITY name      "tailscale-cli">
   <!ENTITY author    "ich777">
-  <!ENTITY version   "2025.04.20">
+  <!ENTITY version   "2025.04.23">
   <!ENTITY gitURL    "https://git.minenet.at/&author;/unraid-&name;/raw/branch/master">
   <!ENTITY pluginURL "&gitURL;/&name;.plg">
   <!ENTITY plugin    "/boot/config/plugins/&name;">
   <!ENTITY emhttp    "/usr/local/emhttp/plugins/&name;">
 ]>
 
-<PLUGIN  name="&name;" author="&author;" version="&version;" pluginURL="&pluginURL;" min="6.9.0">
+<PLUGIN  name="&name;" author="&author;" version="&version;" pluginURL="&pluginURL;" min="6.12.0">
 
 <CHANGES>
+
+###2025.04.23
+- Add Tailscale icon to Unraid header to show if Tailscale is connected or not
 
 ###2025.04.20
 - Add entry to settings.cfg to disable auto updates
@@ -134,7 +137,7 @@ else
   echo "WARNING: Tailscale disabled"
 fi
 
-#Install icon
+#Install icons
 if [ ! -d /usr/local/emhttp/plugins/&name;/images ]; then
   mkdir -p /usr/local/emhttp/plugins/&name;/images
 fi
@@ -143,6 +146,12 @@ if [ ! -f &plugin;/&name;.png ]; then
 fi
 if [ ! -f /usr/local/emhttp/plugins/&name;/images/&name;.png ]; then
   cp &plugin;/&name;.png /usr/local/emhttp/plugins/&name;/images/&name;.png
+fi
+if [ ! -f &plugin;/&name;-offline.png ]; then
+  wget -q -O &plugin;/&name;-offline.png "https://raw.githubusercontent.com/ich777/unraid-tailscale-cli/master/offline.png"
+fi
+if [ ! -f /usr/local/emhttp/plugins/&name;/images/&name;.png ]; then
+  cp &plugin;/&name;-offline.png /usr/local/emhttp/plugins/&name;/images/offline.png
 fi
 
 #Install update script
@@ -155,6 +164,14 @@ fi
 if [ ! -f /usr/local/emhttp/plugins/&name;/scripts/tailscale-check.sh ]; then
   cp &plugin;/tailscale-check.sh /usr/local/emhttp/plugins/&name;/scripts/tailscale-check.sh
   chmod +x /usr/local/emhttp/plugins/&name;/scripts/tailscale-check.sh
+fi
+
+#Install header page
+if [ ! -f &plugin;/tailscale-cli-header.page ]; then
+  wget -q -O &plugin;/tailscale-cli-header.page "https://raw.githubusercontent.com/ich777/unraid-tailscale-cli/refs/heads/master/tailscale-cli-header.page"
+fi
+if [ ! -f /usr/local/emhttp/plugins/&name;/scripts/tailscale-check.sh ]; then
+  cp &plugin;/tailscale-cli-header.page /usr/local/emhttp/plugins/&name;/tailscale-cli-header.page
 fi
 
 #Create cron job
