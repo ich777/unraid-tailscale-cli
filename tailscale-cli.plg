@@ -2,7 +2,7 @@
 <!DOCTYPE PLUGIN [
   <!ENTITY name      "tailscale-cli">
   <!ENTITY author    "ich777">
-  <!ENTITY version   "2025.04.23">
+  <!ENTITY version   "2025.04.23a">
   <!ENTITY gitURL    "https://raw.githubusercontent.com/&author;/unraid-&name;/master">
   <!ENTITY pluginURL "&gitURL;/&name;.plg">
   <!ENTITY plugin    "/boot/config/plugins/&name;">
@@ -12,6 +12,9 @@
 <PLUGIN  name="&name;" author="&author;" version="&version;" pluginURL="&pluginURL;" min="6.12.0">
 
 <CHANGES>
+
+###2025.04.23a
+- Move tailscale state directory on removal to: /boot/config/.tailscale_cli_state and make sure to restore it from that location on new install
 
 ###2025.04.23
 - Add Tailscale icon to Unraid header to show if Tailscale is connected or not
@@ -54,6 +57,13 @@ fi
 #Add missing setting if not found
 if ! grep -q "TAILSCALE_UPDATE_CHECK=" &plugin;/settings.cfg; then
   sed -i '$ a\TAILSCALE_UPDATE_CHECK=true' &plugin;/settings.cfg
+fi
+
+#Move previous state directory back to plugin directory if found
+if [ -d /boot/config/.tailscale_cli_state ]; then
+  echo "Found previous Tailscale state directory, restoring..."
+  cp -R /boot/config/.tailscale_cli_state/* &plugin;/state/
+  rm -rf /boot/config/.tailscale_cli_state
 fi
 
 #Get/set variables
@@ -213,6 +223,9 @@ if [ ! -z "$(pgrep --ns $$ tailscaled)" ]; then
   tailscale down 2&gt;/dev/null
   kill -SIGTERM $(pgrep --ns $$ tailscaled) 2&gt;/dev/null
 fi
+#Create backup from state directory in /boot/config/.tailscale_cli_state
+echo "Creating backup from Tailscale state directory in: /boot/config/.tailscale_cli_state"
+mv &plugin;/state /boot/config/.tailscale_cli_state
 #Remove plugin related files
 rm -rf /usr/local/emhttp/plugins/&name; &plugin; /usr/local/bin/tailscaled /usr/local/bin/tailscale
 #No need to run update_cron since the remove method already does that
