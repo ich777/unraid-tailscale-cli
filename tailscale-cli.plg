@@ -150,7 +150,7 @@ fi
 if [ ! -f &plugin;/&name;-offline.png ]; then
   wget -q -O &plugin;/&name;-offline.png "https://raw.githubusercontent.com/ich777/unraid-tailscale-cli/master/offline.png"
 fi
-if [ ! -f /usr/local/emhttp/plugins/&name;/images/&name;.png ]; then
+if [ ! -f /usr/local/emhttp/plugins/&name;/images/offline.png ]; then
   cp &plugin;/&name;-offline.png /usr/local/emhttp/plugins/&name;/images/offline.png
 fi
 
@@ -170,7 +170,7 @@ fi
 if [ ! -f &plugin;/tailscale-cli-header.page ]; then
   wget -q -O &plugin;/tailscale-cli-header.page "https://raw.githubusercontent.com/ich777/unraid-tailscale-cli/refs/heads/master/tailscale-cli-header.page"
 fi
-if [ ! -f /usr/local/emhttp/plugins/&name;/scripts/tailscale-check.sh ]; then
+if [ ! -f /usr/local/emhttp/plugins/&name;/tailscale-cli-header.page ]; then
   cp &plugin;/tailscale-cli-header.page /usr/local/emhttp/plugins/&name;/tailscale-cli-header.page
 fi
 
