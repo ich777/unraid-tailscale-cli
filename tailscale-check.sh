@@ -37,7 +37,7 @@ if [ ! -z "$(pgrep --ns $$ tailscaled)" ]; then
   tailscale down 2>/dev/null
   kill -SIGTERM $(pgrep --ns $$ tailscaled) 2>/dev/null
 fi
-tar -C /usr/local/bin --strip-components=1 -xf /boot/config/plugins/tailscale-cli/tailscale-package/tailscale_${TAILSCALE_VERSION}_amd64.tgz tailscale_${TAILSCALE_VERSION}_amd64/tailscaled tailscale_${TAILSCALE_VERSION}_amd64/tailscale
+tar -C /usr/local/sbin --strip-components=1 -xf /boot/config/plugins/tailscale-cli/tailscale-package/tailscale_${TAILSCALE_VERSION}_amd64.tgz tailscale_${TAILSCALE_VERSION}_amd64/tailscaled tailscale_${TAILSCALE_VERSION}_amd64/tailscale
 logger "tailscale-cli: Installation from Tailscale version: ${TAILSCALE_VERSION} done"
 
 #Start Tailscale if enabled
@@ -47,7 +47,7 @@ if [ "$(echo "${SETTINGS}" | grep "TAILSCALE_ENABLED=" | cut -d '=' -f2-)" == "t
     TSD_PARAMS=" ${TSD_PARAMS}"
   fi
   logger "tailscale-cli: Starting Tailscale"
-  echo "/usr/local/bin/tailscaled -statedir=/boot/config/plugins/tailscale-cli/state${TSD_PARAMS} >/dev/null 2>&1" | at now -M >/dev/null 2>&1
+  echo "/usr/local/sbin/tailscaled -statedir=/boot/config/plugins/tailscale-cli/state${TSD_PARAMS} >/dev/null 2>&1" | at now -M >/dev/null 2>&1
 else
   logger "tailscale-cli: WARNING: Tailscale disabled"
 fi
