@@ -13,6 +13,9 @@
 
 <CHANGES>
 
+###2025.04.24
+- Make sure to put tailscaled and tailscale binaries into /usr/local/sbin/
+
 ###2025.04.23a
 - Move tailscale state directory on removal to: /boot/config/.tailscale_cli_state and make sure to restore it from that location on new install
 
@@ -118,9 +121,9 @@ fi
 rm -f $(ls &plugin;/tailscale-package/tailscale_*.tgz 2&gt;/dev/null | grep -v "${TAILSCALE_VERSION}")
 
 #Install/Update Tailsale
-if [ ! -f /usr/local/bin/tailscaled ]; then
+if [ ! -f /usr/local/sbin/tailscaled ]; then
   echo "Installing Tailscale"
-  tar -C /usr/local/bin --strip-components=1 -xf &plugin;/tailscale-package/tailscale_${TAILSCALE_VERSION}_amd64.tgz tailscale_${TAILSCALE_VERSION}_amd64/tailscaled tailscale_${TAILSCALE_VERSION}_amd64/tailscale
+  tar -C /usr/local/sbin --strip-components=1 -xf &plugin;/tailscale-package/tailscale_${TAILSCALE_VERSION}_amd64.tgz tailscale_${TAILSCALE_VERSION}_amd64/tailscaled tailscale_${TAILSCALE_VERSION}_amd64/tailscale
 else
   if [ "${NEWPACKAGE}" == "true" ] ; then
     echo "Found new Tailscale version: ${TAILSCALE_VERSION}, installing..."
@@ -129,7 +132,7 @@ else
       tailscale down 2&gt;/dev/null
       kill -SIGTERM $(pgrep --ns $$ tailscaled) 2&gt;/dev/null
     fi
-  tar -C /usr/local/bin --strip-components=1 -xf &plugin;/tailscale-package/tailscale_${TAILSCALE_VERSION}_amd64.tgz tailscale_${TAILSCALE_VERSION}_amd64/tailscaled tailscale_${TAILSCALE_VERSION}_amd64/tailscale
+  tar -C /usr/local/sbin --strip-components=1 -xf &plugin;/tailscale-package/tailscale_${TAILSCALE_VERSION}_amd64.tgz tailscale_${TAILSCALE_VERSION}_amd64/tailscaled tailscale_${TAILSCALE_VERSION}_amd64/tailscale
   fi
 fi
 
@@ -140,7 +143,7 @@ if [ "$(echo "${SETTINGS}" | grep "TAILSCALE_ENABLED=" | cut -d '=' -f2-)" == "t
     TSD_PARAMS=" ${TSD_PARAMS}"
   fi
   echo "Starting Tailscale"
-  echo "/usr/local/bin/tailscaled -statedir=&plugin;/state${TSD_PARAMS} &gt;/dev/null 2&gt;&amp;1" | at now -M &gt;/dev/null 2&gt;&amp;1
+  echo "/usr/local/sbin/tailscaled -statedir=&plugin;/state${TSD_PARAMS} &gt;/dev/null 2&gt;&amp;1" | at now -M &gt;/dev/null 2&gt;&amp;1
 elif [ "$(echo "${SETTINGS}" | grep "TAILSCALE_ENABLED=" | cut -d '=' -f2-)" == "true" ] &amp;&amp; [ ! -z "$(pgrep --ns $$ tailscaled)" ]; then
   echo "Tailscale already started"
 else
@@ -227,7 +230,7 @@ fi
 echo "Creating backup from Tailscale state directory in: /boot/config/.tailscale_cli_state"
 mv &plugin;/state /boot/config/.tailscale_cli_state
 #Remove plugin related files
-rm -rf /usr/local/emhttp/plugins/&name; &plugin; /usr/local/bin/tailscaled /usr/local/bin/tailscale
+rm -rf /usr/local/emhttp/plugins/&name; &plugin; /usr/local/sbin/tailscaled /usr/local/sbin/tailscale
 #No need to run update_cron since the remove method already does that
 echo "----------------------------------------------"
 echo "------Tailscale CLI plugin uninstalled!-------"
