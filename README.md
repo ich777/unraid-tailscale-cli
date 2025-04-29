@@ -1,6 +1,6 @@
 # Unraid Tailscale CLI Plugin
 
-This is just a plugin which installs Tailscale and run it.  
+This is just a lightweight plugin that installs and runs Tailscale on your Unraid server.  
 
 ## Installation
 
@@ -26,4 +26,6 @@ To be able to reach your Unraid WebUI you have to navigate to Setings -> Network
 
 The plugin will check on boot for new versions from Tailscale and scheduled on 5:30  
 
-**Note:** _If you want to change the time from the scheduled update check edit the file: `/boot/config/plugins/tailscale-cli/tailscale.cron` with your preferred schedule, open up a Unraid Terminal and issue `update_cron` (you'll get no output from the command) to update the schedules._
+**Note:** _If you want to change the time from the scheduled update check edit the file: `/boot/config/plugins/tailscale-cli/tailscale.cron` with your preferred schedule, open up a Unraid Terminal and issue `update_cron` (you'll get no output from the command) to update the schedules._  
+  
+**Disabing auto updates:** If you want to disable Auto Updates entirely edit the file `/boot/config/plugins/tailscale-cli/settings.cfg` and set `TAILSCALE_UPDATE_CHECK` to `false`, please note that this will both disable the check on boot and the scheduled daily update check.
